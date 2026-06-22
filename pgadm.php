@@ -29,6 +29,7 @@ $resultado = mysqli_query($conn, "SELECT * FROM cursos ORDER BY id_curso DESC");
             <input type="text" class="form-control mb-2" name="descricao" placeholder="Descrição">
             <input type="number" class="form-control mb-2" step="0.01" name="preco" placeholder="Valor do curso">
             <input type="text" class="form-control mb-2" name="foto" placeholder="Foto">
+            <input type="text" class="form-control mb-2" name="link" placeholder="Adicione o link">
 
              <button type="submit" class="btn btn-success">Adicionar Produto</button>
              <a href="sair.php" class="btn btn-primary">Voltar a Pagina Inicial</a>
@@ -66,6 +67,7 @@ $resultado = mysqli_query($conn, "SELECT * FROM cursos ORDER BY id_curso DESC");
                 </div>
             </div>
         </div>
+        <a href=""></a>
     <?php 
     // O motor para aqui e volta para o início até acabar os cursos
     endwhile; 

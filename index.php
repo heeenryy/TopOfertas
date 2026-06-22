@@ -7,7 +7,7 @@
      <link rel="stylesheet" href="estilo.css">
     <script src="padrao_cards.js"></script>
     <?php require("conexao.php") ?>
-    <title>Document</title>
+    <title>Cursos Online</title>
 </head>
 <body>
      <!-- cabeçalho -->
@@ -17,7 +17,11 @@
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTogglerDemo03" aria-controls="navbarTogglerDemo03" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
+
     <a class=" navbar-brand" href="#"><img src="Captura de tela 2026-03-10 010147.png "  alt=""></a>
+
+    <a href="login.php" class="btn btn-primary ms-auto d-lg-none">Admin</a>
+
     <div class="collapse navbar-collapse" id="navbarTogglerDemo03">
         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
             <li class="nav-item">
@@ -30,13 +34,14 @@
                 <a class="nav-link" href="#" tabindex="-1" aria-disabled="true">Aba 2</a>
             </li>
         </ul>
-        <form class="d-flex">
-            <input class="form-control me-2" type="search" placeholder="Pesquisar" aria-label="Search">
+        <form class="d-flex" method="GET" action="index.php">
+            <input class="form-control me-2" type="search" name="pesquisa" placeholder="Pesquisar" aria-label="Search" value="<?php echo isset($_GET['pesquisa']) ? $_GET['pesquisa'] : ''; ?>">
             <button class="btn btn-success ms-auto" type="submit">Pesquisar</button>
         </form>
+
+        <a href="login.php" class="btn btn-primary ms-2 d-none d-lg-block">Admin</a>     
     </div>
     <div>
-        <button class="btn btn-primary ms-2"><a style="color: white; text-decoration:none;" href="login.php">Admin</a></button>      
     </div>
 </div>
 </nav>
@@ -76,7 +81,13 @@
 </div>
 
   <!-- cursos -->
- <?php $resultado = mysqli_query($conn, "SELECT * FROM cursos ORDER BY id_curso DESC");
+ <?php $pesquisa = isset($_GET['pesquisa']) ? mysqli_real_escape_string($conn,$_GET['pesquisa']):'';
+    if ($pesquisa != '') {
+        $resultado = mysqli_query($conn,"SELECT * FROM cursos LIKE %$pesquisa% ORDER BY id_curso DESC");
+    } else {
+        $resultado = mysqli_query($conn,"SELECT * FROM cursos ORDER BY id_curso DESC");
+    }
+    
  ?>
   <hr class="my-5"> 
 <div class="container">
@@ -84,7 +95,46 @@
     <div class="row">
     <?php 
     // O motor começa aqui: enquanto houver uma linha de curso, ele guarda em $curso
+    echo "Pesquisa: " . $pesquisa;
     while($curso = mysqli_fetch_assoc($resultado)): 
+    ?>
+    <?php 
+    
+        if ($pesquisa != '') {
+            $limite = strlen($pesquisa) / 3;
+            $result = levenshtein($pesquisa,$curso['nome_curso']);
+            
+            if ($$result >= $limite) { ?>
+             <div class="col-md-4 mb-4">
+                <div class="card h-100 shadow-sm">
+                <img src="imagens/<?php echo $curso['foto']; ?>" class="card-img-top" style="height: 180px; object-fit: contain;">
+                
+                <div class="card-body">
+                    <h5 class="fw-bold text-dark"><?php echo $curso['nome_curso']; ?></h5>
+                </div>
+
+                <div class="card-body border-top">
+                    <h6 class="text-muted">Descrição</h6>
+                    <p><?php echo $curso['decricao']; ?></p>
+                </div>
+
+                <div class="card-body border-top mt-auto">
+                    <h6 class="text-muted">Valor</h6>
+                    <p class="text-success fw-bold">R$ <?php echo number_format($curso['preco'], 2, ',', '.'); ?></p>
+                    
+                    <a href="confirmar_exclusao.php?id=<?php echo $curso['id_curso']; ?>">
+                       
+                    </a>
+                    <a href="<?php echo $curso['link']?>" class="btn btn-primary btn-sm w-100" >Comprar Agora</a>
+                </div>
+            </div>
+        </div>
+           <?php } else { ?>
+                    <?php echo "Conteudo não encontrado" ?>
+
+           <?php }?>
+            
+       <?php } else {     
     ?>
         <div class="col-md-4 mb-4">
             <div class="card h-100 shadow-sm">
@@ -103,13 +153,14 @@
                     <h6 class="text-muted">Valor</h6>
                     <p class="text-success fw-bold">R$ <?php echo number_format($curso['preco'], 2, ',', '.'); ?></p>
                     
-                    <a href="confirmar_exclusao.php?id=<?php echo $curso['id_curso']; ?>" class="btn btn-primary btn-sm w-100">
-                        Comprar Agora 
+                    <a href="confirmar_exclusao.php?id=<?php echo $curso['id_curso']; ?>">
+                       
                     </a>
+                    <a href="<?php echo $curso['link']?>" class="btn btn-primary btn-sm w-100" >Comprar Agora</a>
                 </div>
             </div>
         </div>
-    <?php 
+    <?php }
     // O motor para aqui e volta para o início até acabar os cursos
     endwhile; 
     ?>

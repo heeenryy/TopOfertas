@@ -7,8 +7,8 @@
     $descr = $_POST['descricao'];
     $preco = $_POST['preco'];
     $foto = $_POST['foto'];
-
-    $sql = "INSERT INTO cursos (nome_curso,decricao,preco,foto) VALUES ('$nome','$descr','$preco','$foto')";
+    $link = $_POST['link'];
+    $sql = "INSERT INTO cursos (nome_curso,decricao,preco,foto,link) VALUES ('$nome','$descr','$preco','$foto','$link')";
 
     if (mysqli_query($conn,$sql)) {
        
