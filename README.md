@@ -11,7 +11,7 @@ Plataforma web de vendas de produtos e cursos online, desenvolvida em dupla com 
 
 | Página inicial | Listagem de cursos |
 |---|---|
-| ![Home](screenshots/inicio.png) | ![Cursos](screenshots/cursos.png) |
+| ![Home](screenshots/inicio.png) | ![Cursos](screenshots/Cursos.png) |
 
 ---
 
