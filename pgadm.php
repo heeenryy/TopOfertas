@@ -80,6 +80,7 @@ $categorias = mysqli_query($conn,"SELECT * FROM categorias");
                 </div>
             </div>
         </div>
+        <a href=""></a>
     <?php 
     // O motor para aqui e volta para o início até acabar os cursos
     endwhile; 

@@ -126,6 +126,44 @@ $idCategoria = trim($_GET['idCategoria'] ?? '');
   <?php  // O motor começa aqui: enquanto houver uma linha de curso, ele guarda em $curso
     while($curso = mysqli_fetch_assoc($sql)): 
     ?>
+    <?php 
+    
+        if ($pesquisa != '') {
+            $limite = strlen($pesquisa) / 3;
+            $result = levenshtein($pesquisa,$curso['nome_curso']);
+            
+            if ($$result >= $limite) { ?>
+             <div class="col-md-4 mb-4">
+                <div class="card h-100 shadow-sm">
+                <img src="imagens/<?php echo $curso['foto']; ?>" class="card-img-top" style="height: 180px; object-fit: contain;">
+                
+                <div class="card-body">
+                    <h5 class="fw-bold text-dark"><?php echo $curso['nome_curso']; ?></h5>
+                </div>
+
+                <div class="card-body border-top">
+                    <h6 class="text-muted">Descrição</h6>
+                    <p><?php echo $curso['decricao']; ?></p>
+                </div>
+
+                <div class="card-body border-top mt-auto">
+                    <h6 class="text-muted">Valor</h6>
+                    <p class="text-success fw-bold">R$ <?php echo number_format($curso['preco'], 2, ',', '.'); ?></p>
+                    
+                    <a href="confirmar_exclusao.php?id=<?php echo $curso['id_curso']; ?>">
+                       
+                    </a>
+                    <a href="<?php echo $curso['link']?>" class="btn btn-primary btn-sm w-100" >Comprar Agora</a>
+                </div>
+            </div>
+        </div>
+           <?php } else { ?>
+                    <?php echo "Conteudo não encontrado" ?>
+
+           <?php }?>
+            
+       <?php } else {     
+    ?>
         <div class="col-md-4 mb-4">
             <div class="card h-100 shadow-sm">
                 <img src="imagens/<?php echo $curso['foto']; ?>" class="card-img-top" style="height: 180px; object-fit: contain;">
@@ -150,7 +188,7 @@ $idCategoria = trim($_GET['idCategoria'] ?? '');
                 </div>
             </div>
         </div>
-    <?php 
+    <?php }
     // O motor para aqui e volta para o início até acabar os cursos
     endwhile; 
     endif;
