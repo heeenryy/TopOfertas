@@ -1,42 +1,49 @@
 <!DOCTYPE html>
+<?php
+// filtros
+
+$idCategoria = trim($_GET['idCategoria'] ?? '');
+
+?>
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
      <link rel="stylesheet" href="estilo.css">
+     <link rel="shortcut icon" href="image.png" type="image/x-icon">
     <script src="padrao_cards.js"></script>
     <?php require("conexao.php") ?>
-    <title>Document</title>
+    <title>🔥 TopOfertas</title>
 </head>
 <body>
      <!-- cabeçalho -->
     <header>
-   <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+   <nav class="navbar navbar-expand-lg navbar-dark bg-dark" id="cor">
   <div class="container-fluid">
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTogglerDemo03" aria-controls="navbarTogglerDemo03" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
-    <a class=" navbar-brand" href="#"><img src="Captura de tela 2026-03-10 010147.png "  alt=""></a>
+
+    <a class=" navbar-brand" href="index.php">🔥 TopOfertas</a>
+
+    <a href="login.php" class="btn btn-primary ms-auto d-lg-none">Admin</a>
+
     <div class="collapse navbar-collapse" id="navbarTogglerDemo03">
         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
             <li class="nav-item">
-                <a class="nav-link active" aria-current="page" href="#">Principal</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="#">Aba 1</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="#" tabindex="-1" aria-disabled="true">Aba 2</a>
+                <a class="nav-link active" aria-current="page" href="index.php"></a>
+            
             </li>
         </ul>
-        <form class="d-flex">
-            <input class="form-control me-2" type="search" placeholder="Pesquisar" aria-label="Search">
+        <form class="d-flex" method="GET" action="index.php">
+            <input class="form-control me-2" type="search" name="pesquisa" placeholder="Pesquisar" aria-label="Search" value="<?php echo isset($_GET['pesquisa']) ? $_GET['pesquisa'] : ''; ?>">
             <button class="btn btn-success ms-auto" type="submit">Pesquisar</button>
         </form>
+
+        <a href="login.php" class="btn btn-primary ms-2 d-none d-lg-block">Admin</a>     
     </div>
     <div>
-        <button class="btn btn-primary ms-2"><a style="color: white; text-decoration:none;" href="login.php">Admin</a></button>      
     </div>
 </div>
 </nav>
@@ -75,16 +82,49 @@
 
 </div>
 
-  <!-- cursos -->
- <?php $resultado = mysqli_query($conn, "SELECT * FROM cursos ORDER BY id_curso DESC");
+<!-- cursos -->
+<?php
+  if(!empty(intval($idCategoria))){
+      $sql = mysqli_query($conn,"SELECT * FROM cursos WHERE id_categoria = $idCategoria ");
+      
+      } else{
+      $pesquisa = isset($_GET['pesquisa']) ? mysqli_real_escape_string($conn,$_GET['pesquisa']):'';
+    if ($pesquisa != '') {
+        $sql = mysqli_query($conn,"SELECT * FROM cursos where nome_curso LIKE '%$pesquisa%' ORDER BY id_curso DESC");
+    } else {
+        $sql = mysqli_query($conn,"SELECT * FROM cursos ORDER BY id_curso DESC");
+    }}
+    
  ?>
-  <hr class="my-5"> 
-<div class="container">
-    <h2 style="text-align:center; margin-bottom:40px;"  >Nossos principais lançamentos🚀</h2>
-    <div class="row">
+    <!-- Filtros rapidos -->
+<?php $resultcateg = mysqli_query($conn,"SELECT * FROM categorias");
+
+?>
+
+<div class="container text-center my-4">
+    <a href="index.php" class="btn  <?= empty($idCategoria) ? 'btn-secondary' : 'btn-outline-primary' ?> me-2 mb-2">Todos</a>
+    <?php while($resultado2 = mysqli_fetch_assoc($resultcateg)): ?>
+    <a href="index.php?idCategoria=<?= $resultado2['id_categoria'] ?>" class="btn <?= ($resultado2['id_categoria'] == $idCategoria) ? 'btn-secondary' : 'btn-outline-primary' ?> btn-sm rounded-pill me-2 mb-2"><?= $resultado2['nome_categoria'] ?></a>
+    <?php endwhile; ?>  
+</div>
+
+
+
+
     <?php 
-    // O motor começa aqui: enquanto houver uma linha de curso, ele guarda em $curso
-    while($curso = mysqli_fetch_assoc($resultado)): 
+    if(mysqli_num_rows($sql) == 0): ?>
+  
+        <div class="msg-vazio">
+            <div class="ico">🔍</div>
+        <h3 >Nem um curso encontrado</h3>
+      <p>Tente outros filtros ou <a href="index.php">veja todos os produtos</a>.</p>
+    <?php else: ?>
+          <hr class="my-5"> 
+<div class="container">
+    <h2 style="text-align:center; margin-bottom:40px;"  >Nossos produtos</h2>
+    <div class="row">
+  <?php  // O motor começa aqui: enquanto houver uma linha de curso, ele guarda em $curso
+    while($curso = mysqli_fetch_assoc($sql)): 
     ?>
         <div class="col-md-4 mb-4">
             <div class="card h-100 shadow-sm">
@@ -103,20 +143,25 @@
                     <h6 class="text-muted">Valor</h6>
                     <p class="text-success fw-bold">R$ <?php echo number_format($curso['preco'], 2, ',', '.'); ?></p>
                     
-                    <a href="confirmar_exclusao.php?id=<?php echo $curso['id_curso']; ?>" class="btn btn-primary btn-sm w-100">
-                        Comprar Agora 
+                    <a href="confirmar_exclusao.php?id=<?php echo $curso['id_curso']; ?>">
+                       
                     </a>
+                    <a href="<?php echo $curso['link']?>" class="btn btn-primary btn-sm w-100" >Comprar Agora</a>
                 </div>
             </div>
         </div>
     <?php 
     // O motor para aqui e volta para o início até acabar os cursos
     endwhile; 
+    endif;
     ?>
     </div>
 </div>
 </main>
-
+<footer class="footer">
+    <p>&copy; <?= date('Y') ?> <strong>🔥 TopOfertas</strong>. Todos os direitos reservados.</p>
+    <p>Deseja ter um site responsivo e dinâmico? Entre em contato com o desenvolvedor: <a class="whats" href="https://wa.me/77999384424?text=<?= urlencode('Olá Henrique! Quero ter um site responsivo e dinâmico  ') ?>">Whatswapp</a></p>
+</footer>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

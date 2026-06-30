@@ -29,13 +29,47 @@
     background-color: #f8f9fa; /* Um fundinho caso a imagem não ocupe toda a largura */
     margin: 0 auto;           /* Garante que a imagem se alinhe ao centro */
 }
-
+.card{
+transition: 0.3s;
+}
 .card:hover {
-    transform: scale(1.03);
-    transition: 0.3s;
+    /* scale(1.03) */
+    /*transform:translateY(-10px) faz o card (elemento) se mover ou para cima ou para baixo sendo o numero negativo para cima e o positivo para baixo  */
+    transform:translateY(-10px) ;
+    /* box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+
+0 → não desloca a sombra para os lados
+10px → desloca a sombra 10px para baixo
+20px → o quanto a sombra fica desfocada (borrada)
+rgba(0,0,0,0.15) → cor preta com 15% de opacidade (translúcida) */
+    box-shadow: 0 20px 20px rgba(0, 0, 0, 0.15)!important;
 }
 
 .btn-success:hover {
     background-color: #198754; /* verde um pouco mais escuro */
     border-color: #198754;
 }
+.msg-vazio {
+    text-align: center;
+    padding: 5rem 2rem;
+    color:#666;;
+    grid-column: 1 / -1;
+}
+.msg-vazio .ico { font-size: 4rem; margin-bottom: 1rem; opacity: 0.3; }
+footer{
+   background:#22228a;
+    color: rgba(255,255,255,0.5);
+    text-align: center;
+    padding: 2rem;
+    font-size: 0.85rem;
+    margin-top: 4rem; }
+    .whats{
+        color: #11c973;
+        text-decoration: none;
+    }
+    .navbar{
+        background: linear-gradient(to right, #6a11cb, #2575fc)!important;
+    }
+    strong{
+        color: #cfd6df;
+    }
