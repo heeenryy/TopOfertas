@@ -1,9 +1,8 @@
 # 🔥 TopOfertas
 
 Plataforma web de vendas de produtos e cursos online, desenvolvida em dupla com marcus. Permite que visitantes naveguem, filtrem e comprem produtos cadastrados incluindo cursos, itens domésticos e muito mais  com suporte a links de afiliados de plataformas como Mercado Livre, Amazon e similares, permitindo monetização através das vendas. Administradores gerenciam todo o catálogo pelo painel admin.
-🔗 **Acesse o projeto online:** [topofertas.kesug.com](http://topofertas.kesug.com/)
+🔗 **Acesse o projeto online:** [topofertas.kesug.com](https://topofertas.byethost14.com/)
 
-> ⚠️ O certificado SSL está em processo de emissão. Caso o navegador exiba aviso de segurança, clique em "Avançado" e acesse normalmente.
 
 ---
 
